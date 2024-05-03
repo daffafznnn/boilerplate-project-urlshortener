@@ -11,10 +11,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/public", express.static(`${process.cwd()}/public`));
 
-app.get("/", function (req, res) {
-  res.sendFile(process.cwd() + "/views/index.html");
-});
-
 // URL database
 let urlDatabase = {};
 let shortUrlCounter = 1;
@@ -34,7 +30,7 @@ app.post("/api/shorturl", function (req, res) {
   const shortUrl = shortUrlCounter++;
   urlDatabase[shortUrl] = originalUrl;
 
-  // Return response
+  // Return response with original_url and short_url properties
   res.json({ original_url: originalUrl, short_url: shortUrl });
 });
 
