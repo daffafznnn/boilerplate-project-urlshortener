@@ -1,22 +1,18 @@
-require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
+require("dotenv").config();
+const express = require("express");
+const cors = require("cors");
 const app = express();
 
 // Basic Configuration
 const port = process.env.PORT || 3000;
 
 app.use(cors());
-
-app.use('/public', express.static(`${process.cwd()}/public`));
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.get('/', function(req, res) {
-  res.sendFile(process.cwd() + '/views/index.html');
-});
+app.use("/public", express.static(`${process.cwd()}/public`));
 
-// Your first API endpoint
-app.get('/api/hello', function(req, res) {
-  res.json({ greeting: 'hello API' });
+app.get("/", function (req, res) {
+  res.sendFile(process.cwd() + "/views/index.html");
 });
 
 // URL database
@@ -24,13 +20,13 @@ let urlDatabase = {};
 let shortUrlCounter = 1;
 
 // Your API endpoint to shorten URLs
-app.post('/api/shorturl', function(req, res) {
+app.post("/api/shorturl", function (req, res) {
   const originalUrl = req.body.url;
 
   // Check if the URL is valid
   const urlRegex = /^(ftp|http|https):\/\/[^ "]+$/;
   if (!urlRegex.test(originalUrl)) {
-    res.json({ error: 'invalid url' });
+    res.json({ error: "invalid url" });
     return;
   }
 
@@ -43,18 +39,18 @@ app.post('/api/shorturl', function(req, res) {
 });
 
 // Redirect to original URL
-app.get('/api/shorturl/:short_url', function(req, res) {
+app.get("/api/shorturl/:short_url", function (req, res) {
   const shortUrl = req.params.short_url;
   const originalUrl = urlDatabase[shortUrl];
-  
+
   if (!originalUrl) {
-    res.status(404).json({ error: 'URL not found' });
+    res.status(404).json({ error: "URL not found" });
     return;
   }
 
   res.redirect(originalUrl);
 });
 
-app.listen(port, function() {
+app.listen(port, function () {
   console.log(`Listening on port ${port}`);
 });
