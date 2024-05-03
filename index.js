@@ -27,9 +27,8 @@ let shortUrlCounter = 1;
 app.post("/api/shorturl", function (req, res) {
   const originalUrl = req.body.url;
 
-  // Validasi URL menggunakan ekspresi reguler
-  const urlRegex =
-    /^(https?:\/\/)?(www\.)?[a-zA-Z0-9-]+\.[a-zA-Z]{2,}(\.[a-zA-Z]{2,})?$/;
+const urlRegex = /^(https?|http):\/\/(?:(?:[0-9]{1,3}\.){3}[0-9]{1,3}|(?:www\.)?[a-zA-Z0-9-]+\.[a-zA-Z]{2,})(?::[0-9]{1,5})?(?:\/[^]*)?$/;
+
 
   if (!urlRegex.test(originalUrl)) {
     return res.status(400).json({ error: "invalid url" });
